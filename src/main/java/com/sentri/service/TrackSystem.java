@@ -20,19 +20,17 @@ public class TrackSystem {
     }
 
     //Multiple Particle Filtering, this is the main tracking algorithm
-    public void tracking() {
+    public void tracking(int round) {
         //particle structure
-        for (int round = 0; round < dh.trackConfig.getNumRound(); round++) {
-            System.out.println("=====round " + round + " start======");
-            track();
-        }
+
+
     }
 
     public void track() {
         trackModel.readNewData();
         double[][] observation = dh.network.getObservation();
-        //System.out.println(JSON.toJSONString(observation));
         MatlabHelper.setData(observation, dh.network.getAbnormalLinks(), 0);
+        System.out.println(new Gson().toJson(observation));
 
         //predictive estimates
         for (int i = 0; i < dh.trackConfig.getNumTarget(); i++) {
@@ -42,6 +40,9 @@ public class TrackSystem {
 
             //particle propagation
             nextPrediction = trackModel.randomWalk(nextPrediction);
+            for (int t = 0; t < 2000; t++) {
+                dh.particles[t] = nextPrediction.getParticles()[t].clone();
+            }
 
             //update weights
             Location[][] y = new Location[dh.trackConfig.getNumTarget()][dh.trackConfig.getNumParticles()];
