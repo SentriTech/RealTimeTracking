@@ -43,18 +43,11 @@ public class MainCanvas extends JFrame {
         setTitle("果壳安防跟踪系统");
         setBounds(100, 100, 500, 500);
 
-<<<<<<< HEAD
         JPanel interfacePanel = new JPanel();
         interfacePanel.setLayout(new BorderLayout());
 
         JMenuBar mainMenuBar = new JMenuBar();
         mainMenuBar.setBounds(0,0, 20, 400);
-=======
-        Container mainContainer = getContentPane();
-        mainContainer.setLayout(new BorderLayout());
-
-        JMenuBar mainMenuBar = new JMenuBar();
->>>>>>> 5a309c64cae0b7e41ebfd5b1624fb5f85192c906
 
         JMenu configMenu = new JMenu();
         configMenu.setText("设置");
@@ -70,13 +63,10 @@ public class MainCanvas extends JFrame {
         aboutMenu.add(itemAbout);
         mainMenuBar.add(aboutMenu);
 
-<<<<<<< HEAD
         JPanel graphPanel = new JPanel();
         graphPanel.setLayout(new BorderLayout(10, 10));
         graphPanel.setBounds(0, 0, 400, 400);
 
-=======
->>>>>>> 5a309c64cae0b7e41ebfd5b1624fb5f85192c906
         JComponent graph  = new JComponent() {
             public void paintComponent(Graphics g) {
                 Graphics2D g2=(Graphics2D)g;
@@ -126,11 +116,7 @@ public class MainCanvas extends JFrame {
                     Ellipse2D circle = new Ellipse2D.Double();
                     double pX = particle.getLocation().getX()*100;
                     double pY = particle.getLocation().getY()*100;
-<<<<<<< HEAD
                     circle.setFrameFromCenter(pX,pY,pX+1,pY+1);
-=======
-                    circle.setFrameFromCenter(pX,pY,pX+1,pY+2);
->>>>>>> 5a309c64cae0b7e41ebfd5b1624fb5f85192c906
                     g2.draw(circle);
                 }
                 /*
@@ -151,7 +137,6 @@ public class MainCanvas extends JFrame {
                 }*/
             }
         };
-<<<<<<< HEAD
         graph.setVisible(true);
         graphPanel.add(graph);
         graphPanel.setVisible(true);
@@ -163,14 +148,4 @@ public class MainCanvas extends JFrame {
 
         this.setVisible(true);
     }
-=======
-
-        mainContainer.add(graph);
-
-        this.setVisible(true);
-
-    }
-
-
->>>>>>> 5a309c64cae0b7e41ebfd5b1624fb5f85192c906
 }
