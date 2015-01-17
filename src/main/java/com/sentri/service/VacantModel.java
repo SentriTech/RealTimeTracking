@@ -208,11 +208,6 @@ public class VacantModel {
         }
     }
 
-    public void createNetwork() {
-
-    }
-
-
     public void initVacant() {
         initVacantData();
         getRssEmpty();

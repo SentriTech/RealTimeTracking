@@ -13,6 +13,8 @@ public class TrackConfig extends NetworkConfig {
 
     private int numResample = 7;
 
+    private double step = 2;
+
     public int getNumRound() {
         return numRound;
     }
@@ -47,5 +49,13 @@ public class TrackConfig extends NetworkConfig {
 
     public void setNumResample(int numResample) {
         this.numResample = numResample;
+    }
+
+    public double getStep() {
+        return step;
+    }
+
+    public void setStep(double step) {
+        this.step = step;
     }
 }

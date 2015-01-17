@@ -39,11 +39,11 @@ public class TrackModel {
         Random random = new Random(new Date().getTime());
         for (int j = 0; j < dh.trackConfig.getNumParticles(); j++) {
             Location prevLocation = prediction.getParticle(j).getLocation();
-            double x = Math.abs(prevLocation.getX() + dh.modelConfig.getSigmaX() * random.nextGaussian() * 2);
+            double x = Math.abs(prevLocation.getX() + dh.modelConfig.getSigmaX() * random.nextGaussian() * dh.trackConfig.getStep());
             if (x > dh.siteConfig.getLength()) {
                 x = 2 * dh.siteConfig.getLength() - x;
             }
-            double y = Math.abs(prevLocation.getY() + dh.modelConfig.getSigmaY() * random.nextGaussian() * 2);
+            double y = Math.abs(prevLocation.getY() + dh.modelConfig.getSigmaY() * random.nextGaussian() * dh.trackConfig.getStep());
             if (y > dh.siteConfig.getWidth()) {
                 y = 2 * dh.siteConfig.getWidth() - y;
             }
