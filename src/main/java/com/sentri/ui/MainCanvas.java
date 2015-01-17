@@ -1,5 +1,6 @@
 package com.sentri.ui;
 
+import com.google.gson.Gson;
 import com.sentri.model.Particle;
 import com.sentri.model.Prediction;
 import com.sentri.service.DataHolder;
@@ -11,7 +12,13 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.text.AttributedCharacterIterator;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 
 /**
@@ -20,9 +27,30 @@ import javax.swing.*;
 
 public class MainCanvas extends JFrame {
     public static void main(String[] args) {
-        TrackSystem trackSystem = new TrackSystem();
         DataHolder dh = DataHolder.getInstance();
+        try {
+            Map<String, String> configMap = new HashMap<String, String>();
+            //String configFile = args[0];
+            String configFile = "/Users/sanjun.yyj/Develop/workspace/laiwang/fbi/RealTimeTracking/config.prop";
+            File file=new File(configFile);
+            if(file.exists()||!file.isDirectory()) {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String temp = null;
+                StringBuffer sb = new StringBuffer();
+                temp = br.readLine();
+                while(temp != null) {
+                    String[] parts = temp.split("=", -1);
+                    configMap.put(parts[0], parts[1]);
+                    temp=br.readLine();
+                }
+            }
+            System.out.println(new Gson().toJson(configMap));
+            dh.init(configMap);
+        } catch (Exception e) {
+            System.out.println("get config error");
+        }
 
+        TrackSystem trackSystem = new TrackSystem();
         trackSystem.initSystem();
         MainCanvas frame = new MainCanvas();
 
@@ -41,7 +69,7 @@ public class MainCanvas extends JFrame {
     public void refresh() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("果壳安防跟踪系统");
-        setBounds(100, 100, 500, 500);
+        setBounds(100, 100, 1000, 1000);
 
         JPanel interfacePanel = new JPanel();
         interfacePanel.setLayout(new BorderLayout());
@@ -50,30 +78,30 @@ public class MainCanvas extends JFrame {
         mainMenuBar.setBounds(0,0, 20, 400);
 
         JMenu configMenu = new JMenu();
-        configMenu.setText("设置");
+        configMenu.setText("setting");
         configMenu.setFont(new Font("Dialog", 0, 12));
-        JMenuItem itemConfig = new JMenuItem("模型设置");
+        JMenuItem itemConfig = new JMenuItem("model setting");
         configMenu.add(itemConfig);
         mainMenuBar.add(configMenu);
 
         JMenu aboutMenu = new JMenu();
-        aboutMenu.setText("关于");
+        aboutMenu.setText("about");
         aboutMenu.setFont(new Font("Dialog", 0, 12));
-        JMenuItem itemAbout = new JMenuItem("关于");
+        JMenuItem itemAbout = new JMenuItem("about");
         aboutMenu.add(itemAbout);
         mainMenuBar.add(aboutMenu);
 
         JPanel graphPanel = new JPanel();
         graphPanel.setLayout(new BorderLayout(10, 10));
-        graphPanel.setBounds(0, 0, 400, 400);
+        graphPanel.setBounds(0, 0, 800, 800);
 
         JComponent graph  = new JComponent() {
             public void paintComponent(Graphics g) {
                 Graphics2D g2=(Graphics2D)g;
                 double x=100;
                 double y=100;
-                double w=400;
-                double h=400;
+                double w=800;
+                double h=800;
 
                 /*
                 Rectangle2D rect=new Rectangle2D.Double(x,y,w,h);

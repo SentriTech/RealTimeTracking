@@ -14,7 +14,8 @@ public class TrackSystem {
 
 
     public void initSystem() {
-        dh.network.create();
+
+        dh.network.create(dh.sensorLocations);
         vacantModel.initVacant();
         trackModel.initTrack();
     }

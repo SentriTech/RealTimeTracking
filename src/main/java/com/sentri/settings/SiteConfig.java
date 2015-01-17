@@ -10,10 +10,10 @@ import com.sentri.model.Node;
 public class SiteConfig {
 
     //x-aries
-    private double length = 4;
+    private double length = 5.35;
 
     //y-aries
-    private double width = 4;
+    private double width = 4.95;
 
     public SiteConfig() {
 

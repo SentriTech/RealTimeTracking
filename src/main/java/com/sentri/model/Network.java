@@ -117,6 +117,7 @@ public class Network implements Serializable,Cloneable {
     }
     
     public void create() {
+        /*
         this.addNode(0, new Node(0, new Location(0.57, 0)));
         this.addNode(1, new Node(1, new Location(1.14, 0)));
         this.addNode(2, new Node(2, new Location(1.71, 0)));
@@ -141,6 +142,53 @@ public class Network implements Serializable,Cloneable {
         this.addNode(21, new Node(21, new Location(0, 1.71)));
         this.addNode(22, new Node(22, new Location(0, 1.14)));
         this.addNode(23, new Node(23, new Location(0, 0.57)));
+        */
+
+        this.addNode(0, new Node(0, new Location(0.77, 0)));
+        this.addNode(1, new Node(1, new Location(1.555, 0)));
+        this.addNode(2, new Node(2, new Location(2.155, 0)));
+        this.addNode(3, new Node(3, new Location(2.755, 0)));
+        this.addNode(4, new Node(4, new Location(3.655, 0)));
+        this.addNode(5, new Node(5, new Location(4.555, 0)));
+        this.addNode(6, new Node(6, new Location(5.36, 0.565)));
+        this.addNode(7, new Node(7, new Location(5.36, 1.485)));
+        this.addNode(8, new Node(8, new Location(5.36, 2.465)));
+        this.addNode(9, new Node(9, new Location(5.36, 3.075)));
+        this.addNode(10, new Node(10, new Location(5.36, 3.665)));
+        this.addNode(11, new Node(11, new Location(5.36, 4.465)));
+        this.addNode(12, new Node(12, new Location(4.595, 4.95)));
+        this.addNode(13, new Node(13, new Location(4.025, 4.95)));
+        this.addNode(14, new Node(14, new Location(3.405, 4.95)));
+        this.addNode(15, new Node(15, new Location(2.805, 4.95)));
+        this.addNode(16, new Node(16, new Location(2.2215, 4.95)));
+        this.addNode(17, new Node(17, new Location(1.635, 4.95)));
+        this.addNode(18, new Node(18, new Location(0, 3.61)));
+        this.addNode(19, new Node(19, new Location(0, 3.01)));
+        this.addNode(20, new Node(20, new Location(0, 2.41)));
+        this.addNode(21, new Node(21, new Location(0, 1.81)));
+        this.addNode(22, new Node(22, new Location(0, 1.21)));
+        this.addNode(23, new Node(23, new Location(0, 0.61)));
+
+        double[][] dist = MatlabHelper.zeros(this.getNumNode());
+        for (int i = 0; i < this.getNumNode(); i++) {
+            for (int j = 0; j < this.getNumNode(); j++) {
+                dist[i][j] = Math.sqrt(Math.pow(this.getNodes()[i].getLocation().getX()
+                                                        - this.getNodes()[j].getLocation().getX(),
+                                                2)
+                                               + Math.pow(this.getNodes()[i].getLocation().getY()
+                                                                  - this.getNodes()[j].getLocation().getY(),
+                                                          2));
+
+            }
+        }
+        this.setDist(dist);
+    }
+
+    public void create(List<Location> sensorLocations) {
+
+        for (int i = 0; i < sensorLocations.size(); i++) {
+            this.addNode(i, new Node(i, sensorLocations.get(i).clone()));
+        }
 
         double[][] dist = MatlabHelper.zeros(this.getNumNode());
         for (int i = 0; i < this.getNumNode(); i++) {
