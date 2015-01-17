@@ -13,6 +13,5 @@ public class Track extends TestCase {
         TrackSystem trackSystem = new TrackSystem();
         DataHolder dh = DataHolder.getInstance();
         trackSystem.initSystem();
-        trackSystem.tracking();
     }
 }

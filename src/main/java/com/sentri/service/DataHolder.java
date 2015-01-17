@@ -2,6 +2,7 @@ package com.sentri.service;
 
 import com.sentri.io.DataFile;
 import com.sentri.model.Network;
+import com.sentri.model.Particle;
 import com.sentri.model.Target;
 import com.sentri.settings.ModelConfig;
 import com.sentri.settings.SiteConfig;
@@ -21,6 +22,8 @@ public class DataHolder {
 
     public DataFile vacantData = new DataFile();
     public DataFile trackData  = new DataFile();
+
+    public Particle[] particles = new Particle[2000];
 
     //TODO remove it
     double[][] dataAfterIgnore;

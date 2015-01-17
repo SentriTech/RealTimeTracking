@@ -36,14 +36,14 @@ public class TrackModel {
     //The dynamic model, or transition model, this function is to add a dynamic to the particle location,
     //it is like adding a possible location according to the previous estimated location
     public Prediction randomWalk(Prediction prediction) {
+        Random random = new Random(new Date().getTime());
         for (int j = 0; j < dh.trackConfig.getNumParticles(); j++) {
-            Random random = new Random(new Date().getTime());
             Location prevLocation = prediction.getParticle(j).getLocation();
-            double x = Math.abs(prevLocation.getX() + dh.modelConfig.getSigmaX() * random.nextGaussian());
+            double x = Math.abs(prevLocation.getX() + dh.modelConfig.getSigmaX() * random.nextGaussian() * 2);
             if (x > dh.siteConfig.getLength()) {
                 x = 2 * dh.siteConfig.getLength() - x;
             }
-            double y = Math.abs(prevLocation.getY() + dh.modelConfig.getSigmaY() * random.nextGaussian());
+            double y = Math.abs(prevLocation.getY() + dh.modelConfig.getSigmaY() * random.nextGaussian() * 2);
             if (y > dh.siteConfig.getWidth()) {
                 y = 2 * dh.siteConfig.getWidth() - y;
             }
