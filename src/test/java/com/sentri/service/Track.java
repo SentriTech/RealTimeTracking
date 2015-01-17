@@ -1,6 +1,7 @@
 package com.sentri.service;
 
 import com.sentri.utils.MatlabHelper;
+import java.util.Random;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -10,8 +11,9 @@ import org.junit.Test;
 public class Track extends TestCase {
     @Test
     public void test() {
-        TrackSystem trackSystem = new TrackSystem();
-        DataHolder dh = DataHolder.getInstance();
-        trackSystem.initSystem();
+        Random random = new Random();
+        for (int i = 0; i < 100; i++) {
+            System.out.println(random.nextGaussian());
+        }
     }
 }
