@@ -30,8 +30,8 @@ public class MainCanvas extends JFrame {
         DataHolder dh = DataHolder.getInstance();
         try {
             Map<String, String> configMap = new HashMap<String, String>();
-            //String configFile = args[0];
-            String configFile = "/Users/sanjun.yyj/Develop/workspace/laiwang/fbi/RealTimeTracking/config.prop";
+            String configFile = args[0];
+            //String configFile = "/Users/sanjun.yyj/Develop/workspace/laiwang/fbi/RealTimeTracking/config.prop";
             File file=new File(configFile);
             if(file.exists()||!file.isDirectory()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
