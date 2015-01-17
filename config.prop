@@ -9,6 +9,7 @@ track.num.resample=7
 track.num.particle=2000
 track.num.round=600
 track.num.target=1
+track.step=2
 site.length=5.35
 site.width=4.95
 model.phi=3

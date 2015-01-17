@@ -60,6 +60,7 @@ public class DataHolder {
         trackConfig.setNumParticles(Integer.valueOf(configMap.get("track.num.particle")));
         trackConfig.setNumRound(Integer.valueOf(configMap.get("track.num.round")));
         trackConfig.setNumTarget(Integer.valueOf(configMap.get("track.num.target")));
+        trackConfig.setStep(Double.valueOf(configMap.get("track.step")));
 
         siteConfig.setLength(Double.valueOf(configMap.get("site.length")));
         siteConfig.setWidth(Double.valueOf(configMap.get("site.width")));
