@@ -12,7 +12,7 @@ public class Track extends TestCase {
     @Test
     public void test() {
         Random random = new Random();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 2000; i++) {
             System.out.println(random.nextGaussian());
         }
     }

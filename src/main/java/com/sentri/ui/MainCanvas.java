@@ -5,6 +5,7 @@ import com.sentri.model.Particle;
 import com.sentri.model.Prediction;
 import com.sentri.service.DataHolder;
 import com.sentri.service.TrackSystem;
+import com.sentri.utils.MatlabHelper;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -30,8 +31,8 @@ public class MainCanvas extends JFrame {
         DataHolder dh = DataHolder.getInstance();
         try {
             Map<String, String> configMap = new HashMap<String, String>();
-            String configFile = args[0];
-            //String configFile = "/Users/sanjun.yyj/Develop/workspace/laiwang/fbi/RealTimeTracking/config.prop";
+            //String configFile = args[0];
+            String configFile = "/Users/sanjun.yyj/Develop/workspace/sentri/RealTimeTracking/new_config.prop";
             File file=new File(configFile);
             if(file.exists()||!file.isDirectory()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
@@ -52,6 +53,20 @@ public class MainCanvas extends JFrame {
 
         TrackSystem trackSystem = new TrackSystem();
         trackSystem.initSystem();
+        System.out.println(new Gson().toJson(dh.network.getNodes()));
+        System.out.println(new Gson().toJson(dh.network.getRssEmpty()));
+        int k = 0;
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 24; j++) {
+                if (dh.network.getAbnormalLinks()[j][i] == 1) {
+                    int id = j-i;
+                    for (int t = 0; t < i; t++) {
+                        id += 23-t;
+                    }
+                    System.out.println((k++) + "," + id + "," + j + "," + i);
+                }
+            }
+        }
         MainCanvas frame = new MainCanvas();
 
         for (int round = 0; round < dh.trackConfig.getNumRound(); round++) {
@@ -64,7 +79,6 @@ public class MainCanvas extends JFrame {
     public MainCanvas() {
         refresh();
     }
-    Particle[] particles = new Particle[2000];
 
     public void refresh() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,11 +139,11 @@ public class MainCanvas extends JFrame {
                 g2.draw(circle);
                 */
                 double prevX = 0;
-                double prevY = 0;
+                double prevY = DataHolder.getInstance().siteConfig.getWidth()*100;
                 for (Prediction prediction : DataHolder.getInstance().targets.get(0).getPredictions()) {
                     Ellipse2D circle = new Ellipse2D.Double();
                     double currX = prediction.getLocation().getX()*100;
-                    double currY = prediction.getLocation().getY()*100;
+                    double currY = (DataHolder.getInstance().siteConfig.getWidth()-prediction.getLocation().getY())*100;
                     circle.setFrameFromCenter(currX,currY,currX+2,currY+2);
                     g2.draw(circle);
 
@@ -140,29 +154,24 @@ public class MainCanvas extends JFrame {
                     prevY = currY;
                 }
 
-                for (Particle particle : DataHolder.getInstance().targets.get(0).getCurrPrediction().getParticles()) {
+                /*
+                //for (Particle particle : DataHolder.getInstance().targets.get(0).getCurrPrediction().getParticles()) {
+                for (Particle particle : DataHolder.getInstance().particles) {
                     Ellipse2D circle = new Ellipse2D.Double();
                     double pX = particle.getLocation().getX()*100;
-                    double pY = particle.getLocation().getY()*100;
+                    double pY = (DataHolder.getInstance().siteConfig.getWidth()-particle.getLocation().getY())*100;
                     circle.setFrameFromCenter(pX,pY,pX+1,pY+1);
                     g2.draw(circle);
                 }
-                /*
-                if (DataHolder.getInstance().targets.get(0).getPredictions().size() == 61) {
-                    for (int t = 0; t < 2000; t++) {
-                        particles[t] = DataHolder.getInstance().particles[t].clone();
-                    }
-                }
-                if (DataHolder.getInstance().targets.get(0).getPredictions().size() > 60) {
 
-                    for (Particle particle : particles) {
-                        Ellipse2D circle = new Ellipse2D.Double();
-                        double pX = particle.getLocation().getX()*100;
-                        double pY = particle.getLocation().getY()*100;
-                        circle.setFrameFromCenter(pX,pY,pX+1,pY+2);
-                        g2.draw(circle);
-                    }
-                }*/
+                for (Particle particle : DataHolder.getInstance().targets.get(0).getCurrPrediction().getParticles()) {
+                    Ellipse2D circle = new Ellipse2D.Double();
+                    double pX = particle.getLocation().getX()*100;
+                    double pY = (DataHolder.getInstance().siteConfig.getWidth()-particle.getLocation().getY())*100;
+                    circle.setFrameFromCenter(pX,pY,pX+20,pY+20);
+                    g2.draw(circle);
+                }
+                */
             }
         };
         graph.setVisible(true);

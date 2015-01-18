@@ -73,10 +73,14 @@ public class TrackModel {
             for (int j = 0; j < dh.trackConfig.getNumParticles(); j++) {
                 for (int k = 0; k < dh.network.getNumNode(); k++) {
                     for (int l = 0; l < dh.network.getNumNode(); l++) {
-                        attenuation[l][k][j][i] = y[i][j].calcDist(dh.network.getNodes()[k].getLocation())
-                                                + y[i][j].calcDist(dh.network.getNodes()[l].getLocation())
-                                                - dh.network.getDist()[l][k];
-                        attenuation[l][k][j][i] = dh.modelConfig.getPhi() * Math.exp(-attenuation[l][k][j][i]/(2*dh.modelConfig.getSigmaLambda()));
+                        if (dh.network.getAbnormalLinks()[l][k] == 0) {
+                            attenuation[l][k][j][i] = y[i][j].calcDist(dh.network.getNodes()[k].getLocation())
+                                                    + y[i][j].calcDist(dh.network.getNodes()[l].getLocation())
+                                                    - dh.network.getDist()[l][k];
+                            attenuation[l][k][j][i] = dh.modelConfig.getPhi() * Math.exp(-attenuation[l][k][j][i]/(2*dh.modelConfig.getSigmaLambda()));
+                        } else {
+                            attenuation[l][k][j][i] = 0;
+                        }
                     }
                 }
             }
@@ -85,7 +89,7 @@ public class TrackModel {
         double[][][] zCalced = MatlabHelper.sumDim(attenuation, 3);
 
         //TODO PI???
-        double sigmaConst = -0.5 * dh.network.getNumLink() * Math.log(2 * Math.PI * Math.pow(dh.modelConfig.getSigmaZ(), 2));
+        double sigmaConst = -0.5 * (dh.network.getNumLink() - dh.network.getAbnormalLinks().length) * Math.log(2 * Math.PI * Math.pow(dh.modelConfig.getSigmaZ(), 2));
 
         double[][][] logLikelyhood = MatlabHelper.zeros(dh.network.getNumNode(),
                                                         dh.network.getNumNode(),
@@ -93,8 +97,12 @@ public class TrackModel {
         for (int i = 0; i < dh.network.getNumNode(); i++) {
             for (int j = 0; j < dh.network.getNumNode(); j++) {
                 for (int k = 0; k < dh.trackConfig.getNumParticles(); k++) {
-                    logLikelyhood[i][j][k] = - Math.pow(zCalced[i][j][k] - observation[i][j], 2)
+                    if (dh.network.getAbnormalLinks()[i][j] == 0) {
+                        logLikelyhood[i][j][k] = - Math.pow(zCalced[i][j][k] - observation[i][j], 2)
                             / (2 * Math.pow(dh.modelConfig.getSigmaZ(), 2));
+                    } else {
+                        logLikelyhood[i][j][k] = 0;
+                    }
                 }
             }
         }
@@ -119,6 +127,7 @@ public class TrackModel {
             for (int j = 0; j < weight.length; j++) {
                 if (v[i] >= edges[j] && v[i] < edges[j+1]) {
                     index[i] = j;
+                    break;
                 }
             }
         }
@@ -156,8 +165,8 @@ public class TrackModel {
         //we use the data of the node as the receiving end,
         //to measure each link, which can't be missing since every row has 28 columns of data.
         for (int i = 0; i < numNode; i++) {
-            for (int j = 0; j < numNode; j++) {
-                if (rssAverageAcrossTime[i][0] == 0) {
+            if (rssAverageAcrossTime[i][0] == 0) {
+                for (int j = 0; j < numNode; j++) {
                     rssAverageAcrossTime[i][j] = rssAverageAcrossTime[j][i];
                 }
             }
@@ -193,10 +202,10 @@ public class TrackModel {
         for (int i = 0; i < dh.network.getNumNode(); i++) {
             for (int j = 0; j < dh.network.getNumNode(); j++) {
                 while (linkMeasured[i][j] > 127) {
-                    linkMeasured[i][j] = linkMeasured[i][j] - 128;
+                    linkMeasured[i][j] = linkMeasured[i][j] - 256;
                 }
                 while (linkAverage[i][j] > 127) {
-                    linkAverage[i][j] = linkAverage[i][j] - 128;
+                    linkAverage[i][j] = linkAverage[i][j] - 256;
                 }
             }
         }

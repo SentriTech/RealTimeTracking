@@ -14,17 +14,9 @@ public class TrackSystem {
 
 
     public void initSystem() {
-
         dh.network.create(dh.sensorLocations);
         vacantModel.initVacant();
         trackModel.initTrack();
-    }
-
-    //Multiple Particle Filtering, this is the main tracking algorithm
-    public void tracking(int round) {
-        //particle structure
-
-
     }
 
     public void track() {
@@ -32,6 +24,7 @@ public class TrackSystem {
         double[][] observation = dh.network.getObservation();
         MatlabHelper.setData(observation, dh.network.getAbnormalLinks(), 0);
         System.out.println(new Gson().toJson(observation));
+        dh.network.setObservation(observation);
 
         //predictive estimates
         for (int i = 0; i < dh.trackConfig.getNumTarget(); i++) {
@@ -65,23 +58,20 @@ public class TrackSystem {
             }
 
             double[] likelihood = trackModel.computeLikelihood(y, observation);
-            //System.out.println("likelihood" + JSON.toJSONString(likelihood));
-            nextPrediction.setWeights(likelihood);
+            //System.out.println("likelihood" + new Gson().toJson(likelihood));
 
             //normalize the weights to sum to one
             //for each target, sum particle weight && norm to 1
-            double maxWeight = nextPrediction.getMaxWeight();
-            for (int j = 0; j < dh.trackConfig.getNumParticles(); j++) {
-                nextPrediction.getParticle(j).setWeight(nextPrediction.getParticle(j).getWeight() - maxWeight);
-            }
-            double sumWeight = nextPrediction.getSumExpWeight();
-            for (int j = 0; j < dh.trackConfig.getNumParticles(); j++) {
-                nextPrediction.getParticle(j).setWeight(Math.exp(nextPrediction.getParticle(j).getWeight()) / sumWeight);
-            }
-            //System.out.println(JSON.toJSONString(nextPrediction.getWeights()));
+            double maxWeight = MatlabHelper.max(likelihood);
+            likelihood = MatlabHelper.minus(likelihood, maxWeight);
+            double sumWeight = MatlabHelper.sum(MatlabHelper.exp(likelihood));
+            likelihood = MatlabHelper.divide(MatlabHelper.exp(likelihood), sumWeight);
+            nextPrediction.setWeights(likelihood);
+
+            System.out.println(new Gson().toJson(likelihood));
 
             //resample particles
-            int[] outIndex = trackModel.resample(nextPrediction.getWeights());
+            int[] outIndex = trackModel.resample(likelihood);
             //System.out.println(JSON.toJSONString(outIndex));
             for (int j = 0; j < dh.trackConfig.getNumParticles(); j++) {
                 nextPrediction.getParticle(j).setWeight(1.0 / dh.trackConfig.getNumParticles());

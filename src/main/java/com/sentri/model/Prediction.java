@@ -6,15 +6,6 @@ import java.io.Serializable;
  * Created by sanjun.yyj on 12/7/14.
  */
 public class Prediction implements Serializable,Cloneable {
-    //JSMM not used current
-    /*
-    double[] theta;
-
-    //TODO???
-    double[] u;
-    */
-
-    //nParticles;
     Particle[] particles;
 
     Location location;
@@ -45,23 +36,6 @@ public class Prediction implements Serializable,Cloneable {
             particles[i].setWeight(weights[i]);
         }
     }
-/*
-    public double[] getTheta() {
-        return theta;
-    }
-
-    public void setTheta(double[] theta) {
-        this.theta = theta;
-    }
-
-    public double[] getU() {
-        return u;
-    }
-
-    public void setU(double[] u) {
-        this.u = u;
-    }
-*/
 
     public Particle[] getParticles() {
         return particles;
@@ -77,24 +51,6 @@ public class Prediction implements Serializable,Cloneable {
 
     public void setParticle(int i, Particle particle) {
         particles[i] = particle;
-    }
-
-    public double getMaxWeight() {
-        double max = -32767;
-        for (int i = 0; i < particles.length; i++) {
-            if (particles[i].getWeight() > max) {
-                max = particles[i].getWeight();
-            }
-        }
-        return max;
-    }
-
-    public double getSumExpWeight() {
-        double sum = 0;
-        for (int i = 0; i < particles.length; i++) {
-            sum += Math.exp(particles[i].getWeight());
-        }
-        return sum;
     }
 
     public double[] getWeights() {
